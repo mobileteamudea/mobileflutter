@@ -68,31 +68,31 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Center(
           child: Column(
-            children: <Widget>[
-              const Image(image: AssetImage('assets/images/logo.png')),
-              const SizedBox(
+            children: const <Widget>[
+              Image(image: AssetImage('assets/images/logo.png')),
+              SizedBox(
                 height: 16.0,
               ),
               Text(
-                'Nombre del usuario: ${userLoad.name}',
+                'Nombre del usuario: equipo  mobilteam',
                 style:
-                    const TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
+                    TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
               ),
-              const SizedBox(
+              SizedBox(
+                height: 16.0,
+              ),
+               Text(
+                'Ubicacion en el : colombia',
+                style:
+                     TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
+              ),
+              SizedBox(
                 height: 16.0,
               ),
               Text(
-                'Email del usuario: ${userLoad.email}',
+                'Temperatura: 34°',
                 style:
-                    const TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
-              ),
-              const SizedBox(
-                height: 16.0,
-              ),
-              Text(
-                'Genero del usuario: ${userLoad.genre}',
-                style:
-                    const TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
+                     TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
               ),
             ],
           ),
