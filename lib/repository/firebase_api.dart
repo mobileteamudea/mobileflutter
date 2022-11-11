@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../models/Book.dart';
 import '../models/User.dart' as UserApp;
 
 class FirebaseApi {
@@ -43,6 +45,26 @@ class FirebaseApi {
       return user.uid;
     } on FirebaseException catch (e) {
       print("FirebaseExcepcion: ${e.code}");
+      return e.code;
+    }
+  }
+
+  Future<String> createBook(Book book) async{
+    try{
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      final document = FirebaseFirestore.instance.collection("users")
+          .doc(uid)
+          .collection("books")
+          .doc();
+      book.id = document.id;
+      final result = FirebaseFirestore.instance.collection("users")
+            .doc(uid)
+            .collection("books")
+            .doc(book.id)
+            .set(book.toJson());
+      return book.id;
+    } on FirebaseException catch (e){
+      print("FirebaseExcepcion ${e.code}");
       return e.code;
     }
   }

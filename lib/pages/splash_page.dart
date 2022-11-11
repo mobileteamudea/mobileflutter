@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mis_libros/pages/home_page.dart';
+
 import 'login_page.dart';
 
 class SplashPage extends StatefulWidget {
@@ -31,8 +34,15 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _closeSplash() async {
     Future.delayed(const Duration(seconds: 4), () async {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const LoginPage()));
+      var currentUser = FirebaseAuth.instance.currentUser;
+      if(currentUser == null){
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const LoginPage()));
+      }else{
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const HomePage()));
+      }
+
     });
   }
 }

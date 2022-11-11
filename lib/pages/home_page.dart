@@ -1,8 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mis_libros/models/User.dart';
-import 'dart:convert';
-import 'dart:ui';
+import 'package:mis_libros/pages/login_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -33,12 +31,13 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+enum Menu {logout}
 class _MyHomePageState extends State<MyHomePage> {
-  User userLoad = User.Empty();
+  //User userLoad = User.Empty();
   getUser() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    Map<String, dynamic> userMap = jsonDecode(preferences.getString("user")!);
-    userLoad = User.fromJson(userMap);
+   // SharedPreferences preferences = await SharedPreferences.getInstance();
+    //Map<String, dynamic> userMap = jsonDecode(preferences.getString("user")!);
+    //userLoad = User.fromJson(userMap);
   }
 
   @override
@@ -54,15 +53,23 @@ class _MyHomePageState extends State<MyHomePage> {
         leading: const Icon(Icons.menu),
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
-        actions: const [
-          Icon(Icons.favorite),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Icon(Icons.search),
-          ),
-          Icon(Icons.more_vert),
+        actions: <Widget>[
+          PopupMenuButton <Menu>(
+            onSelected: (Menu item){
+              setState(() {
+                if(item == Menu.logout){
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                }
+              });
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
+              const PopupMenuItem(
+                  value: Menu.logout, child: Text('Cerrar Session'))
+            ],
+          )
         ],
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
