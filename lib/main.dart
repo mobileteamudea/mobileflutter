@@ -1,9 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mis_libros/pages/my_books_page.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:mis_libros/pages/splash_page.dart';
 
 import 'firebase_options.dart';
+import 'models/local_book.dart';
 
 
 void main() async {
@@ -11,6 +14,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await Hive.initFlutter();
+  Hive.registerAdapter(LocalBookAdapter());
+
+  await Hive.openBox<LocalBook>('favorites');
   runApp(const MyApp());
 }
 
@@ -33,7 +40,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyBooksPage(),
+      home: const SplashPage(),
     );
   }
 }

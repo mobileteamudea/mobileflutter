@@ -13,9 +13,6 @@ class _MyBooksPageState extends State<MyBooksPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("mis libros"),
-      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: StreamBuilder<QuerySnapshot>(

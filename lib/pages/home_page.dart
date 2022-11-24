@@ -1,6 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mis_libros/pages/books_store_page.dart';
 import 'package:mis_libros/pages/login_page.dart';
+import 'package:mis_libros/pages/my_books_page.dart';
+import 'package:mis_libros/pages/searchbooks_page.dart';
+
+import 'favorites_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -8,7 +14,7 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
-
+/**
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
@@ -29,30 +35,46 @@ class MyHomePage extends StatefulWidget {
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
-}
+}*/
 
 enum Menu {logout}
-class _MyHomePageState extends State<MyHomePage> {
+//class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage>  {
   //User userLoad = User.Empty();
+  var currentPage = 0;
+  late List<Widget> pages;
   getUser() async {
    // SharedPreferences preferences = await SharedPreferences.getInstance();
     //Map<String, dynamic> userMap = jsonDecode(preferences.getString("user")!);
     //userLoad = User.fromJson(userMap);
   }
 
+  void _loadPages() {
+    pages = [];
+    pages.add(MyBooksPage());
+    pages.add(SearcBookPage());
+    pages.add(FavoritesPage());
+    pages.add(BookStorePage());
+  }
+
   @override
   void initState() {
-    getUser();
+    _loadPages();
     super.initState();
   }
 
+  void _onItemTapped(int page){
+    setState(() {
+      currentPage = page;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: const Icon(Icons.menu),
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text("Mis Libros"),
         actions: <Widget>[
           PopupMenuButton <Menu>(
             onSelected: (Menu item){
@@ -71,39 +93,31 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
         backgroundColor: Colors.blue,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-        child: Center(
-          child: Column(
-            children: const <Widget>[
-              Image(image: AssetImage('assets/images/logo.png')),
-              SizedBox(
-                height: 16.0,
-              ),
-              Text(
-                'Nombre del usuario: equipo  mobilteam',
-                style:
-                    TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-               Text(
-                'Ubicacion en el : colombia',
-                style:
-                     TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Text(
-                'Temperatura: 34°',
-                style:
-                     TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
-              ),
-            ],
+      body: IndexedStack(
+        index: currentPage,
+        children: pages,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentPage,
+        type: BottomNavigationBarType.fixed,
+        onTap: (page){
+          _onItemTapped(page);
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.book, size: 20,),
+            label: 'Mis Libros'
           ),
-        ),
+          BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.searchengin, size:20),
+              label: 'Buscar'),
+          BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.heart, size:20),
+              label: 'Favoritos'),
+          BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.store, size:20),
+              label: 'Tiendas'),
+        ],
       ),
     );
   }

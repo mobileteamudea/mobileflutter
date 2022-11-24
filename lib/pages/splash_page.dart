@@ -35,6 +35,7 @@ class _SplashPageState extends State<SplashPage> {
   Future<void> _closeSplash() async {
     Future.delayed(const Duration(seconds: 4), () async {
       var currentUser = FirebaseAuth.instance.currentUser;
+      print(currentUser);
       if(currentUser == null){
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const LoginPage()));

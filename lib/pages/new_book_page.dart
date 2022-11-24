@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:mis_libros/models/Book.dart';
+import 'package:mis_libros/repository/firebase_api.dart';
+
+import 'home_page.dart';
 
 class NewBooksPage extends StatefulWidget {
   const NewBooksPage({Key? key}) : super(key: key);
@@ -11,7 +15,7 @@ class NewBooksPage extends StatefulWidget {
 }
 
 class _NewBooksPageState extends State<NewBooksPage> {
-
+  final FirebaseApi _firebaseApi = FirebaseApi();
   final _name =TextEditingController();
   final _author =TextEditingController();
   final _page =TextEditingController();
@@ -21,7 +25,40 @@ class _NewBooksPageState extends State<NewBooksPage> {
   bool _accion = false, _aventura = false, _cienciaFiccion = false, _drama= false;
   bool _fantasia = false, _romance = false, _suspenso = false, _terror = false;
 
-  void _saveBook() {}
+  void _showMsg(String msg){
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(content: Text(msg),
+        action: SnackBarAction(
+            label: 'Aceptar', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
+  }
+
+  void chanpage(){
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const HomePage()));
+  }
+
+  void _createBook(Book book) async{
+    var resul = await _firebaseApi.createBook(book);
+    _showMsg(resul);
+    //Navigator.pop(context);
+    chanpage();
+  }
+  void _saveBook() {
+    var genres = "";
+    if(_accion) genres = "$genres Accion";
+    if(_aventura) genres = "$genres Aventura";
+    if(_cienciaFiccion) genres = "$genres CienciaFicion";
+    if(_drama) genres = "$genres Drama";
+    if(_fantasia) genres = "$genres Fantasia";
+    if(_romance) genres = "$genres Romance";
+    if(_suspenso) genres = "$genres Suspenso";
+    if(_terror) genres = "$genres Terror";
+    var book = Book("",_name.text,_author.text,_page.text,_rating,genres);
+    _createBook(book);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +94,7 @@ class _NewBooksPageState extends State<NewBooksPage> {
                 controller: _page,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(), labelText: 'Numero de pagina'),
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
               ),
               const SizedBox(
                 height: 16.0,
